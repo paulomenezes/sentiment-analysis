@@ -1,0 +1,28 @@
+{
+  "name": "sentiment-analysis",
+  "version": "1.0.0",
+  "description": "Aspect-Based Sentiment Analysis",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paulomenezes/sentiment-analysis.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/paulomenezes/sentiment-analysis/issues"
+  },
+  "homepage": "https://github.com/paulomenezes/sentiment-analysis#readme",
+  "dependencies": {
+    "compromise": "^10.7.0",
+    "node-wordnet": "^0.1.12",
+    "sentiword": "0.0.1",
+    "wndb-with-exceptions": "^3.0.2",
+    "wordnet": "^0.1.2",
+    "xml2js": "^0.4.17"
+  }
+}
