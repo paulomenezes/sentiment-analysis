@@ -55,8 +55,9 @@ emotional.load(() => {
     parser.parseString(data, (err, result) => {
       //const sentence = result.Reviews.Review[0].sentences[0].sentence[0];
       // Each sentence of a review (first one)
-      let positives = 0;
+      let total = [0, 0];
       result.Reviews.Review.forEach(review => {
+        let positives = 0;
         review.sentences[0].sentence.forEach(sentence => {
           // Get the text and remove stopwords
           const text = sentence.text[0].removeStopWords();
@@ -127,8 +128,8 @@ emotional.load(() => {
             //console.log(opinionAspects);
 
             const compare = [];
-            results.forEach(r => {
-              opinionAspects.forEach(o => {
+            opinionAspects.forEach(o => {
+              results.forEach(r => {
                 if (natural.JaroWinklerDistance(r[0], o[0]) >= 0.9) {
                   if (r[1] === o[1]) {
                     compare.push(true);
@@ -161,11 +162,13 @@ emotional.load(() => {
 
         console.log(
           'Quantity of sentences:',
-          positives + '/' + result.Reviews.Review[0].sentences[0].sentence.length
+          positives + '/' + review.sentences[0].sentence.length
         );
-
-        positives = 0;
+        total[0] += positives;
+        total[1] += review.sentences[0].sentence.length;
       });
+
+      console.log(total);
     });
   });
 });
