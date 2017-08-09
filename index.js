@@ -78,7 +78,7 @@ const trainClassifier = callback => {
 
 const sentimentAnalysis = () => {
   emotional.load(() => {
-    fs.readFile(trainingData, (err, data) => {
+    fs.readFile(testData, (err, data) => {
       parser.parseString(data, (err, result) => {
         // Each sentence of a review (first one)
         let total = [0, 0];
@@ -86,7 +86,7 @@ const sentimentAnalysis = () => {
           let positives = 0;
           review.sentences[0].sentence.forEach(sentence => {
             // Get the text and remove stopwords
-            const text = sentence.text[0].removeStopWords();
+            const text = sentence.text[0].toLowerCase().removeStopWords();
             // Tokenization [text to array]
             const tokens = tokenizer.tokenize(text);
 
@@ -117,8 +117,8 @@ const sentimentAnalysis = () => {
                   }
                 });
 
-                console.log('opinions', aspects);
-                console.log('opinionAspects', c);
+                // console.log('opinions', aspects);
+                // console.log('opinionAspects', c);
 
                 const results = [];
 
