@@ -83,10 +83,12 @@ const sentimentAnalysis = () => {
         // Each sentence of a review (first one)
         let total = [0, 0];
         result.Reviews.Review.forEach(review => {
-          let positives = 0;
           review.sentences[0].sentence.forEach(sentence => {
+            //const sentence = result.Reviews.Review[0].sentences[0].sentence[0];
+            // console.log(sentence);
+            let positives = 0;
             // Get the text and remove stopwords
-            const text = sentence.text[0].toLowerCase().removeStopWords();
+            const text = sentence.text[0].toLowerCase(); // .removeStopWords();
             // Tokenization [text to array]
             const tokens = tokenizer.tokenize(text);
 
@@ -130,8 +132,8 @@ const sentimentAnalysis = () => {
                   // If emotional is not empty get polarity
                   if (senti.assessments.length > 0) {
                     let polarity = 'neutral';
-                    if (senti.polarity >= neutralThreshold) polarity = 'positive';
-                    else if (senti.polarity <= -neutralThreshold) polarity = 'negative';
+                    if (senti.polarity >= 0) polarity = 'positive';
+                    else if (senti.polarity < 0) polarity = 'negative';
 
                     results.push([aspect, polarity]);
                   } else {
@@ -140,40 +142,48 @@ const sentimentAnalysis = () => {
                   }
                 });
 
+                // console.log(opinionAspects);
+                // console.log(results);
+
                 // Compare the emotional with the database
                 const compare = [];
                 opinionAspects.forEach(o => {
                   results.forEach(r => {
-                    if (natural.JaroWinklerDistance(r[0], o[0]) >= 0.9) {
-                      // console.log(r[0], r[1], o[1]);
+                    if (natural.JaroWinklerDistance(r[0], o[0]) >= 0.8) {
                       if (r[1] === o[1]) {
                         compare.push(true);
-                      } else {
-                        compare.push(false);
                       }
                     }
                   });
                 });
 
-                // Count
-                let allPositive = true;
-                compare.forEach(r => {
-                  if (!r) allPositive = false;
-                });
+                total[0] += opinionAspects.length;
+                total[1] += compare.length;
 
-                if (allPositive && compare.length > 0) {
-                  positives++;
-                }
+                // Count
+                // let allPositive = true;
+                // compare.forEach(r => {
+                //   if (!r) allPositive = false;
+                // });
+
+                // if (allPositive && compare.length > 0) {
+                //   positives++;
+                // }
+
+                // console.log(positives);
               }
             }
           });
-
-          total[0] += positives;
-          total[1] += review.sentences[0].sentence.length;
         });
-
         console.log(total);
+
+        // total[0] += positives;
+        // total[1] += review.sentences[0].sentence.length;
+        // console.log(total);
       });
+      //});
+
+      //});
     });
   });
 };
