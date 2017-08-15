@@ -82,6 +82,12 @@ const sentimentAnalysis = () => {
       parser.parseString(data, (err, result) => {
         // Each sentence of a review (first one)
         let total = [0, 0];
+        let tp = 0;
+        let tn = 0;
+        let fp = 0;
+        let fn = 0;
+        let nt = 0;
+
         result.Reviews.Review.forEach(review => {
           review.sentences[0].sentence.forEach(sentence => {
             //const sentence = result.Reviews.Review[0].sentences[0].sentence[0];
@@ -142,9 +148,6 @@ const sentimentAnalysis = () => {
                   }
                 });
 
-                // console.log(opinionAspects);
-                // console.log(results);
-
                 // Compare the emotional with the database
                 const compare = [];
                 opinionAspects.forEach(o => {
@@ -153,37 +156,37 @@ const sentimentAnalysis = () => {
                       if (r[1] === o[1]) {
                         compare.push(true);
                       }
+
+                      if (r[1] === 'positive' && o[1] === 'positive') {
+                        tp++;
+                      } else if (r[1] === 'positive' && o[1] === 'negative') {
+                        tn++;
+                      } else if (r[1] === 'negative' && o[1] === 'negative') {
+                        fp++;
+                      } else if (r[1] === 'negative' && o[1] === 'positive') {
+                        fn++;
+                      }
                     }
                   });
                 });
 
                 total[0] += opinionAspects.length;
                 total[1] += compare.length;
-
-                // Count
-                // let allPositive = true;
-                // compare.forEach(r => {
-                //   if (!r) allPositive = false;
-                // });
-
-                // if (allPositive && compare.length > 0) {
-                //   positives++;
-                // }
-
-                // console.log(positives);
               }
             }
           });
         });
+
         console.log(total);
-
-        // total[0] += positives;
-        // total[1] += review.sentences[0].sentence.length;
-        // console.log(total);
+        console.log('accuracy', total[1] / total[0]);
+        console.log('accuracy', (tp + tn) / (tp + tn + fp + fn));
+        console.log('precision', tp / (tp + fp));
+        console.log('recall', tp / (tp + fn));
+        console.log('true positive', tp);
+        console.log('true negative', tn);
+        console.log('false positive', fp);
+        console.log('false negative', fn);
       });
-      //});
-
-      //});
     });
   });
 };
